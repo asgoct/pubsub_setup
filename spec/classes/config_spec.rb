@@ -56,4 +56,15 @@ describe 'pubsub_setup::config' do
             })
   }
 
+  it { should contain_exec('start-server-pubsub_app')
+      .with({
+              'command'   => 'node app.js&',
+              'user'      => 'testuser',
+              'group'     => 'testuser',
+              'cwd'       => '/home/testuser/pubsub_app',
+              'unless'    => "ps ax | grep '[n]ode app.js'",
+              'require'   => 'Exec[copy-configjs]',
+            })
+  }
+
 end

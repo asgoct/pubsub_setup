@@ -43,4 +43,13 @@ class pubsub_setup::config(
     require     => Exec['npm-install'],
   }
 
+  exec { "start-server-${app_name}":
+    command     => 'node app.js&',
+    user        => $deploy_user,
+    group       => $deploy_user,
+    cwd         => "/home/${deploy_user}/${app_name}",
+    unless      => "ps ax | grep '[n]ode app.js'",
+    require     => Exec['copy-configjs'],
+  }
+
 }
