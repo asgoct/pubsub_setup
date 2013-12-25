@@ -4,12 +4,12 @@ describe package('nodejs') do
   it { should be_installed }
 end
 
-describe port(3010) do
-  it { should be_listening }
+describe package('git-core') do
+  it { should be_installed }
 end
 
-describe service('apache2') do
-  it { should be_enabled }
+describe port(3010) do
+  it { should be_listening }
 end
 
 describe file("/home/vagrant/ln_notifications") do
