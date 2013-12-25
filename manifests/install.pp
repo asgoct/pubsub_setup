@@ -6,4 +6,12 @@ class pubsub_setup::install {
     ensure   => present,
   }
 
+  package { 'build-essential':
+    ensure   => present,
+  }
+
+  package { 'redis-server':
+    ensure   => present,
+  }
+
 }

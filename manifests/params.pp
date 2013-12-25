@@ -4,4 +4,5 @@ class pubsub_setup::params {
   $git_user         = 'quippp-deployer'
   $git_pass         = 'blakb1rrd0007'
   $git_url          = 'github.com/quippp'
+  $git_branch       = 'vamsee'
 }
