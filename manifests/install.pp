@@ -2,13 +2,22 @@
 
 class pubsub_setup::install {
 
-  package { 'git-core':
-    ensure   => present,
-    require  => Class['nodejs'],
+  if !defined(Package['nodejs']) {
+    package { 'nodejs':
+      ensure   => present,
+    }
   }
 
-  package { 'build-essential':
-    ensure   => present,
+  if !defined(Package['git-core']) {
+    package { 'git-core':
+      ensure   => present,
+    }
+  }
+
+  if !defined(Package['build-essential']) {
+    package { 'build-essential':
+      ensure   => present,
+    }
   }
 
   package { 'redis-server':

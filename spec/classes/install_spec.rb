@@ -16,7 +16,6 @@ describe 'pubsub_setup::install' do
   it { should contain_package('git-core')
       .with({
               'ensure' => 'present',
-              'require' => 'Class[Nodejs]',
             })
   }
 end

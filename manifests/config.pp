@@ -33,7 +33,7 @@ class pubsub_setup::config(
     logoutput   => true,
     timeout     => 0,
     cwd         => "/home/${deploy_user}/${app_name}",
-    require     => Exec["git-clone-${app_name}"],
+    require     => [ Exec["git-clone-${app_name}"], Package['nodejs'] ],
   }
 
   exec { 'copy-configjs':

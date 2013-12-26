@@ -41,7 +41,7 @@ describe 'pubsub_setup::config' do
               'logoutput' => 'true',
               'timeout'   => '0',
               'cwd'       => '/home/testuser/pubsub_app',
-              'require'   => 'Exec[git-clone-pubsub_app]',
+              'require'   => ['Exec[git-clone-pubsub_app]', 'Package[nodejs]'],
             })
   }
 

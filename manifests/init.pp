@@ -36,8 +36,11 @@
 # Copyright 2013 Your name here, unless otherwise noted.
 #
 class pubsub_setup {
-  class { 'nodejs':
-    manage_repo => true,
+
+  if !defined(Class['nodejs']) {
+    class { 'nodejs':
+      manage_repo => true,
+    }
   }
 
   class { 'pubsub_setup::install': } ->
