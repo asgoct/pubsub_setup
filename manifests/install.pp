@@ -4,6 +4,7 @@ class pubsub_setup::install {
 
   package { 'git-core':
     ensure   => present,
+    require  => Class['nodejs'],
   }
 
   package { 'build-essential':

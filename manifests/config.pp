@@ -1,3 +1,5 @@
+# configure pubsub:
+
 class pubsub_setup::config(
   $deploy_user = $pubsub_setup::params::deploy_user,
   $git_user    = $pubsub_setup::params::git_user,
