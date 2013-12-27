@@ -18,4 +18,9 @@ class {'update_aptget':
   stage => first,
 }
 
-include pubsub_setup
+# change this to 'development' if you're
+# mounting the app by yourself:
+
+class { 'pubsub_setup':
+  deploy_env => 'production',
+}

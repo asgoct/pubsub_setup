@@ -7,4 +7,5 @@ class pubsub_setup::params {
   $git_pass         = 'blakb1rrd0007'
   $git_url          = 'github.com/quippp'
   $git_branch       = 'vamsee'
+  $deploy_env       = 'production'
 }

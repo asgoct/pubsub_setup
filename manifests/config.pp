@@ -7,25 +7,33 @@ class pubsub_setup::config(
   $git_url     = $pubsub_setup::params::git_url,
   $git_branch  = $pubsub_setup::params::git_branch,
   $app_name    = $pubsub_setup::params::app_name,
+  $deploy_env  = $pubsub_setup::params::deploy_env,
   ) inherits pubsub_setup::params {
 
-  exec { "git-clone-${app_name}":
-    command => "git clone -b ${git_branch} https://${git_user}:${git_pass}@${git_url}/${app_name}",
-    timeout => 0,
-    user    => $deploy_user,
-    group   => $deploy_user,
-    cwd     => "/home/${deploy_user}",
-    creates => "/home/${deploy_user}/${app_name}",
-    require => Package['git-core'],
-  }
+  if $deploy_env == 'production' {
 
-  exec { "git-pull-${app_name}":
-    user    => $deploy_user,
-    group   => $deploy_user,
-    timeout => 0,
-    cwd     => "/home/${deploy_user}/${app_name}",
-    command => 'git pull',
-    require => Exec["git-clone-${app_name}"],
+    exec { "git-clone-${app_name}":
+      command => "git clone -b ${git_branch} https://${git_user}:${git_pass}@${git_url}/${app_name}",
+      timeout => 0,
+      user    => $deploy_user,
+      group   => $deploy_user,
+      cwd     => "/home/${deploy_user}",
+      creates => "/home/${deploy_user}/${app_name}",
+      require => Package['git-core'],
+    }
+
+    exec { "git-pull-${app_name}":
+      user    => $deploy_user,
+      group   => $deploy_user,
+      timeout => 0,
+      cwd     => "/home/${deploy_user}/${app_name}",
+      command => 'git pull',
+      require => Exec["git-clone-${app_name}"],
+    }
+
+    $npm_require = [ Exec["git-clone-${app_name}"], Package['nodejs'] ]
+  } else {
+    $npm_require = Package['nodejs']
   }
 
   exec { 'npm-install':
@@ -33,7 +41,7 @@ class pubsub_setup::config(
     logoutput   => true,
     timeout     => 0,
     cwd         => "/home/${deploy_user}/${app_name}",
-    require     => [ Exec["git-clone-${app_name}"], Package['nodejs'] ],
+    require     => $npm_require,
   }
 
   exec { 'copy-configjs':

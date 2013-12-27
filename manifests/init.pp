@@ -35,7 +35,14 @@
 #
 # Copyright 2013 Your name here, unless otherwise noted.
 #
-class pubsub_setup {
+class pubsub_setup($deploy_env = 'UNSET') {
+
+  include pubsub_setup::params
+
+  $curr_deploy_env = $deploy_env ? {
+    'UNSET'   => $::pubsub_setup::params::deploy_env,
+    default   => $deploy_env,
+  }
 
   if !defined(Class['nodejs']) {
     class { 'nodejs':
@@ -44,7 +51,9 @@ class pubsub_setup {
   }
 
   class { 'pubsub_setup::install': } ->
-  class { 'pubsub_setup::config':  } ~>
+  class { 'pubsub_setup::config':
+    deploy_env => $curr_deploy_env,
+  } ~>
   class { 'pubsub_setup::service': } ->
   Class['pubsub_setup']
 
