@@ -44,12 +44,6 @@ class pubsub_setup($deploy_env = 'UNSET') {
     default   => $deploy_env,
   }
 
-  if !defined(Class['nodejs']) {
-    class { 'nodejs':
-      manage_repo => true,
-    }
-  }
-
   class { 'pubsub_setup::install': } ->
   class { 'pubsub_setup::config':
     deploy_env => $curr_deploy_env,
