@@ -21,6 +21,9 @@ class {'update_aptget':
 # change this to 'development' if you're
 # mounting the app by yourself:
 
+class { 'nodejs':
+  manage_repo => true,
+} ->
 class { 'pubsub_setup':
   deploy_env => 'production',
 }

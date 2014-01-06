@@ -31,7 +31,7 @@ class pubsub_setup::config(
       require => Exec["git-clone-${app_name}"],
     }
 
-    $npm_require = [ Exec["git-clone-${app_name}"], Package['nodejs'] ]
+    $npm_require = [ Exec["git-pull-${app_name}"], Package['nodejs'] ]
   } else {
     $npm_require = Package['nodejs']
   }

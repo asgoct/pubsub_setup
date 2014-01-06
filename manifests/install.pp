@@ -6,4 +6,16 @@ class pubsub_setup::install {
     ensure   => present,
   }
 
+  if !defined(Package['nodejs']) {
+    package { 'nodejs':
+      ensure   => present,
+    }
+  }
+
+  if !defined(Package['git-core']) {
+    package { 'git-core':
+      ensure   => present,
+    }
+  }
+
 }
