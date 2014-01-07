@@ -18,4 +18,10 @@ class pubsub_setup::install {
     }
   }
 
+  if !defined(Package['build-essential']) {
+    package { 'build-essential':
+      ensure   => present,
+    }
+  }
+
 }
