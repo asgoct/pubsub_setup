@@ -25,5 +25,5 @@ class { 'nodejs':
   manage_repo => true,
 } ->
 class { 'pubsub_setup':
-  deploy_env => 'production',
+  deploy_env => 'vagrant',
 }
