@@ -15,6 +15,14 @@ describe 'pubsub_setup::config' do
         :git_branch => 'my_br',
       } }
 
+    it { should contain_user('testuser')
+        .with({ 'ensure'     => 'present',
+                'managehome' => 'true',
+                'shell'      => '/bin/bash',
+                'password'   => '$1$Zn4UIQ5U$oh4IqMnvkRuqYZQbdXJl91',
+              })
+    }
+
     it { should contain_exec('git-clone-pubsub_app')
         .with({
                 'command' => 'git clone -b my_br https://johndoe:secret@somerepo.com/pubsub_app',
@@ -23,7 +31,7 @@ describe 'pubsub_setup::config' do
                 'group'   => 'testuser',
                 'cwd'     => '/home/testuser',
                 'creates' => '/home/testuser/pubsub_app',
-                'require' => 'Package[git-core]',
+                'require' => ['Package[git-core]', 'User[testuser]'],
               })
     }
 
@@ -83,6 +91,14 @@ describe 'pubsub_setup::config' do
         :deploy_env => 'development',
       } }
 
+    it { should contain_user('testuser')
+        .with({ 'ensure'     => 'present',
+                'managehome' => 'true',
+                'shell'      => '/bin/bash',
+                'password'   => '$1$Zn4UIQ5U$oh4IqMnvkRuqYZQbdXJl91',
+              })
+    }
+
     it { should_not contain_exec('git-clone-pubsub_app') }
     it { should_not contain_exec('git-pull-pubsub_app') }
 
@@ -92,7 +108,7 @@ describe 'pubsub_setup::config' do
                 'logoutput' => 'true',
                 'timeout'   => '0',
                 'cwd'       => '/home/testuser/pubsub_app',
-                'require'   => 'Package[nodejs]',
+                'require'   => ['Package[nodejs]', 'User[testuser]'],
               })
     }
 
@@ -131,6 +147,14 @@ describe 'pubsub_setup::config' do
         :deploy_env => 'production',
       } }
 
+    it { should contain_user('testuser')
+        .with({ 'ensure'     => 'present',
+                'managehome' => 'true',
+                'shell'      => '/bin/bash',
+                'password'   => '$1$Zn4UIQ5U$oh4IqMnvkRuqYZQbdXJl91',
+              })
+    }
+
     it { should_not contain_exec('git-clone-pubsub_app') }
     it { should_not contain_exec('git-pull-pubsub_app') }
 
@@ -140,7 +164,7 @@ describe 'pubsub_setup::config' do
                 'logoutput' => 'true',
                 'timeout'   => '0',
                 'cwd'       => '/home/testuser/pubsub_app/current',
-                'require'   => 'Package[nodejs]',
+                'require'   => ['Package[nodejs]', 'User[testuser]'],
               })
     }
 

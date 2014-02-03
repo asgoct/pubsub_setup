@@ -10,6 +10,17 @@ class pubsub_setup::config(
   $deploy_env  = $pubsub_setup::params::deploy_env,
   ) inherits pubsub_setup::params {
 
+  if !defined(User[$deploy_user]) {
+    # password is foobar, but we aren't going
+    # to use it anyway.
+    user { $deploy_user:
+      ensure      => present,
+      managehome  => true,
+      shell       => '/bin/bash',
+      password    => '$1$Zn4UIQ5U$oh4IqMnvkRuqYZQbdXJl91',
+    }
+  }
+
   if $deploy_env == 'vagrant' {
 
     exec { "git-clone-${app_name}":
@@ -19,7 +30,7 @@ class pubsub_setup::config(
       group   => $deploy_user,
       cwd     => "/home/${deploy_user}",
       creates => "/home/${deploy_user}/${app_name}",
-      require => Package['git-core'],
+      require => [ Package['git-core'], User[$deploy_user]],
     }
 
     exec { "git-pull-${app_name}":
@@ -33,7 +44,7 @@ class pubsub_setup::config(
 
     $npm_require = [ Exec["git-pull-${app_name}"], Package['nodejs'] ]
   } else {
-    $npm_require = Package['nodejs']
+    $npm_require = [ Package['nodejs'], User[$deploy_user] ]
   }
 
   if $deploy_env == 'production' {
