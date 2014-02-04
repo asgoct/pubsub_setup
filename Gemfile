@@ -6,6 +6,8 @@ else
     gem 'puppet', :require => false
 end
 
+gem 'capistrano', '~> 3.1.0'
+
 group :development, :test do
   gem 'rake',                    :require => false
   gem 'rspec-puppet',            :require => false
