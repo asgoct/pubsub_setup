@@ -47,36 +47,32 @@ class pubsub_setup::config(
     $npm_require = [ Package['nodejs'], User[$deploy_user] ]
   }
 
-  if $deploy_env == 'production' {
-    $deploy_dir  = "/home/${deploy_user}/${app_name}/current"
-  } else {
-    $deploy_dir  = "/home/${deploy_user}/${app_name}"
-  }
+  if $deploy_env in ['vagrant', 'development'] {
+    exec { 'npm-install':
+      command     => 'npm install',
+      logoutput   => true,
+      timeout     => 0,
+      cwd         => "/home/${deploy_user}/${app_name}",
+      require     => $npm_require,
+    }
 
-  exec { 'npm-install':
-    command     => 'npm install',
-    logoutput   => true,
-    timeout     => 0,
-    cwd         => $deploy_dir,
-    require     => $npm_require,
-  }
+    exec { 'copy-configjs':
+      command     => 'cp config.js.sample config.js',
+      user        => $deploy_user,
+      group       => $deploy_user,
+      cwd         => "/home/${deploy_user}/${app_name}/config",
+      creates     => "/home/${deploy_user}/${app_name}/config/config.js",
+      require     => Exec['npm-install'],
+    }
 
-  exec { 'copy-configjs':
-    command     => 'cp config.js.sample config.js',
-    user        => $deploy_user,
-    group       => $deploy_user,
-    cwd         => "${deploy_dir}/config",
-    creates     => "${deploy_dir}/config/config.js",
-    require     => Exec['npm-install'],
-  }
-
-  exec { "start-server-${app_name}":
-    command     => 'node app.js&',
-    user        => $deploy_user,
-    group       => $deploy_user,
-    cwd         => $deploy_dir,
-    unless      => "ps ax | grep '[n]ode app.js'",
-    require     => Exec['copy-configjs'],
+    exec { "start-server-${app_name}":
+      command     => 'node app.js&',
+      user        => $deploy_user,
+      group       => $deploy_user,
+      cwd         => "/home/${deploy_user}/${app_name}",
+      unless      => "ps ax | grep '[n]ode app.js'",
+      require     => Exec['copy-configjs'],
+    }
   }
 
 }

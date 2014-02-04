@@ -79,7 +79,7 @@ describe 'pubsub_setup::config' do
     }
   end
 
-  context 'production setting' do
+  context 'development setting' do
 
     let(:params) { {
         :git_user => 'johndoe',
@@ -138,12 +138,7 @@ describe 'pubsub_setup::config' do
   context 'production setting' do
 
     let(:params) { {
-        :git_user => 'johndoe',
         :deploy_user => 'testuser',
-        :git_pass => 'secret',
-        :git_url  => 'somerepo.com',
-        :app_name => 'pubsub_app',
-        :git_branch => 'my_br',
         :deploy_env => 'production',
       } }
 
@@ -158,36 +153,11 @@ describe 'pubsub_setup::config' do
     it { should_not contain_exec('git-clone-pubsub_app') }
     it { should_not contain_exec('git-pull-pubsub_app') }
 
-    it { should contain_exec('npm-install')
-        .with({
-                'command'   => 'npm install',
-                'logoutput' => 'true',
-                'timeout'   => '0',
-                'cwd'       => '/home/testuser/pubsub_app/current',
-                'require'   => ['Package[nodejs]', 'User[testuser]'],
-              })
-    }
+    it { should_not contain_exec('npm-install') }
 
-    it { should contain_exec('copy-configjs')
-        .with({
-                'command'   => 'cp config.js.sample config.js',
-                'user'      => 'testuser',
-                'group'     => 'testuser',
-                'cwd'       => '/home/testuser/pubsub_app/current/config',
-                'creates'   => '/home/testuser/pubsub_app/current/config/config.js',
-                'require'   => 'Exec[npm-install]',
-              })
-    }
+    it { should_not contain_exec('copy-configjs') }
 
-    it { should contain_exec('start-server-pubsub_app')
-        .with({
-                'command'   => 'node app.js&',
-                'user'      => 'testuser',
-                'group'     => 'testuser',
-                'cwd'       => '/home/testuser/pubsub_app/current',
-                'unless'    => "ps ax | grep '[n]ode app.js'",
-                'require'   => 'Exec[copy-configjs]',
-              })
-    }
+    it { should_not contain_exec('start-server-pubsub_app') }
+
    end
 end
