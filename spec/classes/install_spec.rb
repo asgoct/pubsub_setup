@@ -18,4 +18,18 @@ describe 'pubsub_setup::install' do
               'ensure' => 'present',
             })
   }
+
+  it { should contain_package('nodejs')
+      .with({
+              'ensure' => 'present',
+            })
+  }
+
+  it { should contain_package('forever')
+      .with({
+              'ensure' => 'present',
+              'provider' => 'npm',
+              'require'  => 'Package[nodejs]',
+            })
+  }
 end
