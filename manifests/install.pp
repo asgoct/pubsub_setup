@@ -24,7 +24,7 @@ class pubsub_setup::install {
     }
   }
 
-  package { 'forever':
+  package { 'pm2':
     ensure     => present,
     provider   => npm,
     require    => Package['nodejs'],

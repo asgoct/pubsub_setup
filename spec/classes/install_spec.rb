@@ -25,7 +25,7 @@ describe 'pubsub_setup::install' do
             })
   }
 
-  it { should contain_package('forever')
+  it { should contain_package('pm2')
       .with({
               'ensure' => 'present',
               'provider' => 'npm',
