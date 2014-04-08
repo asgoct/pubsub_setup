@@ -24,10 +24,10 @@ class pubsub_setup::install {
     }
   }
 
-  package { 'pm2':
-    ensure     => present,
-    provider   => npm,
-    require    => Package['nodejs'],
+  if !defined(Package['monit']) {
+    package { 'monit':
+      ensure   => present,
+    }
   }
 
 }

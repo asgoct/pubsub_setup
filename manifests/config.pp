@@ -10,6 +10,20 @@ class pubsub_setup::config(
   $deploy_env  = $pubsub_setup::params::deploy_env,
   ) inherits pubsub_setup::params {
 
+  file { '/etc/monit/monitrc':
+    ensure       => file,
+    source       => 'puppet:///modules/pubsub_setup/monitrc',
+    require      => Package['monit'],
+    notify       => Service['monit'],
+  }
+
+  # file { '/etc/monit/conf.d/pubsub.conf':
+  #   ensure       => 'file',
+  #   source       => 'puppet:///modules/pubsub_setup/monit_pubsub.conf',
+  #   require      => Package['monit'],
+  #   notify       => Service['monit'],
+  # }
+
   if !defined(User[$deploy_user]) {
     # password is foobar, but we aren't going
     # to use it anyway.

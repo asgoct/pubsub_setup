@@ -25,11 +25,10 @@ describe 'pubsub_setup::install' do
             })
   }
 
-  it { should contain_package('pm2')
+  it { should contain_package('monit')
       .with({
               'ensure' => 'present',
-              'provider' => 'npm',
-              'require'  => 'Package[nodejs]',
             })
   }
+
 end

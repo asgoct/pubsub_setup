@@ -15,6 +15,15 @@ describe 'pubsub_setup::config' do
         :git_branch => 'my_br',
       } }
 
+    it { should contain_file('/etc/monit/monitrc')
+        .with({
+                'ensure'     => 'file',
+                'source'     => 'puppet:///modules/pubsub_setup/monitrc',
+                'require'    => 'Package[monit]',
+                'notify'     => 'Service[monit]',
+              })
+    }
+
     it { should contain_user('testuser')
         .with({ 'ensure'     => 'present',
                 'managehome' => 'true',
@@ -91,6 +100,15 @@ describe 'pubsub_setup::config' do
         :deploy_env => 'development',
       } }
 
+    it { should contain_file('/etc/monit/monitrc')
+        .with({
+                'ensure'     => 'file',
+                'source'     => 'puppet:///modules/pubsub_setup/monitrc',
+                'require'    => 'Package[monit]',
+                'notify'     => 'Service[monit]',
+              })
+    }
+
     it { should contain_user('testuser')
         .with({ 'ensure'     => 'present',
                 'managehome' => 'true',
@@ -141,6 +159,15 @@ describe 'pubsub_setup::config' do
         :deploy_user => 'testuser',
         :deploy_env => 'production',
       } }
+
+    it { should contain_file('/etc/monit/monitrc')
+        .with({
+                'ensure'     => 'file',
+                'source'     => 'puppet:///modules/pubsub_setup/monitrc',
+                'require'    => 'Package[monit]',
+                'notify'     => 'Service[monit]',
+              })
+    }
 
     it { should contain_user('testuser')
         .with({ 'ensure'     => 'present',
