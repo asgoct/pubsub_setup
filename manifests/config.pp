@@ -10,6 +10,14 @@ class pubsub_setup::config(
   $deploy_env  = $pubsub_setup::params::deploy_env,
   ) inherits pubsub_setup::params {
 
+  if $deploy_env == 'production' {
+    $deploy_dir = "/home/${deploy_user}/${app_name}/current"
+    $rails_env  = 'production'
+  } else {
+    $deploy_dir = "/home/${deploy_user}/${app_name}"
+    $rails_env  = 'development'
+  }
+
   file { '/etc/monit/monitrc':
     ensure       => file,
     source       => 'puppet:///modules/pubsub_setup/monitrc',
@@ -43,7 +51,7 @@ class pubsub_setup::config(
       user    => $deploy_user,
       group   => $deploy_user,
       cwd     => "/home/${deploy_user}",
-      creates => "/home/${deploy_user}/${app_name}",
+      creates => $deploy_dir,
       require => [ Package['git-core'], User[$deploy_user]],
     }
 
@@ -51,7 +59,7 @@ class pubsub_setup::config(
       user    => $deploy_user,
       group   => $deploy_user,
       timeout => 0,
-      cwd     => "/home/${deploy_user}/${app_name}",
+      cwd     => $deploy_dir,
       command => 'git pull',
       require => Exec["git-clone-${app_name}"],
     }
@@ -66,7 +74,7 @@ class pubsub_setup::config(
       command     => 'npm install',
       logoutput   => true,
       timeout     => 0,
-      cwd         => "/home/${deploy_user}/${app_name}",
+      cwd         => $deploy_dir,
       require     => $npm_require,
     }
 
@@ -74,8 +82,8 @@ class pubsub_setup::config(
       command     => 'cp config.js.sample config.js',
       user        => $deploy_user,
       group       => $deploy_user,
-      cwd         => "/home/${deploy_user}/${app_name}/config",
-      creates     => "/home/${deploy_user}/${app_name}/config/config.js",
+      cwd         => "${deploy_dir}/config",
+      creates     => "${deploy_dir}/config/config.js",
       require     => Exec['npm-install'],
     }
 
@@ -83,7 +91,7 @@ class pubsub_setup::config(
       command     => 'node app.js&',
       user        => $deploy_user,
       group       => $deploy_user,
-      cwd         => "/home/${deploy_user}/${app_name}",
+      cwd         => $deploy_dir,
       unless      => "ps ax | grep '[n]ode app.js'",
       require     => Exec['copy-configjs'],
     }
