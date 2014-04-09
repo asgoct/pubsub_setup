@@ -25,12 +25,12 @@ class pubsub_setup::config(
     notify       => Service['monit'],
   }
 
-  # file { '/etc/monit/conf.d/pubsub.conf':
-  #   ensure       => 'file',
-  #   source       => 'puppet:///modules/pubsub_setup/monit_pubsub.conf',
-  #   require      => Package['monit'],
-  #   notify       => Service['monit'],
-  # }
+  file { '/etc/monit/conf.d/pubsub.conf':
+    ensure       => 'file',
+    content      => template('pubsub_setup/monit_pubsub.conf.erb'),
+    require      => Package['monit'],
+    notify       => Service['monit'],
+  }
 
   if !defined(User[$deploy_user]) {
     # password is foobar, but we aren't going

@@ -1,0 +1,4 @@
+check process pubsub with pidfile <%= deploy_dir %>/log/pubsub.pid
+      group pubsub
+      start program = "<%= deploy_dir %>/script/server start" as uid <%= deploy_user %> and gid <%= deploy_user %>
+      stop program = "<%= deploy_dir %>/script/server stop" as uid <%= deploy_user %> and gid <%= deploy_user %>
