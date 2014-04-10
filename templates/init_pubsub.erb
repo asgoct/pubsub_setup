@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -e
+
+PID_FILE=/var/run/pubsub.pid
+LOG_FILE=/home/deploy/ln_notifications/log/node.log
+NODE_USER=deploy
+
+case $1 in
+    start)
+        # rm -rf $PID_FILE
+
+        # first stop to avoid port clash on mistaken start
+        start-stop-daemon --stop --quiet --oknodo --pidfile $PID_FILE
+        # then clean start
+        start-stop-daemon --start --quiet --chuid $NODE_USER \
+            --make-pidfile --pidfile $PID_FILE --background \
+            --exec /bin/bash -- -c "cd /home/deploy/ln_notifications; exec node app.js > $LOG_FILE 2>&1"
+        ;;
+    stop)
+        start-stop-daemon --stop --quiet --oknodo --pidfile $PID_FILE
+        rm -rf $PID_FILE
+        ;;
+    *)
+        echo "usage: pubsub {start|stop}"
+        exit 1
+        ;;
+esac
+
+exit 0
