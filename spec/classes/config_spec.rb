@@ -40,6 +40,21 @@ describe 'pubsub_setup::config' do
         .with_content(/stop program = \"\/etc\/init.d\/pubsub stop\"/)
     }
 
+    it { should contain_file('/etc/init.d/pubsub')
+        .with({
+                'ensure'     => 'file',
+                'require'    => 'template(pubsub_setup/init_pubsub.conf.erb)',
+                'require'    => 'Package[monit]',
+                'notify'     => 'Service[monit]',
+              })
+    }
+
+    it { should contain_file('/etc/init.d/pubsub')
+        .with_content(/PID_FILE=\/var\/run\/pubsub.pid/)
+        .with_content(/LOG_FILE=\/home\/testuser\/pubsub_app\/log\/node.log/)
+        .with_content(/--exec \/bin\/bash -- -c \"cd \/home\/testuser\/pubsub_app; exec node app.js > \$LOG_FILE 2>&1\"/)
+    }
+
     it { should contain_user('testuser')
         .with({ 'ensure'     => 'present',
                 'managehome' => 'true',
@@ -141,6 +156,20 @@ describe 'pubsub_setup::config' do
         .with_content(/stop program = \"\/etc\/init.d\/pubsub stop\"/)
     }
 
+    it { should contain_file('/etc/init.d/pubsub')
+        .with({
+                'ensure'     => 'file',
+                'require'    => 'template(pubsub_setup/init_pubsub.conf.erb)',
+                'require'    => 'Package[monit]',
+                'notify'     => 'Service[monit]',
+              })
+    }
+
+    it { should contain_file('/etc/init.d/pubsub')
+        .with_content(/PID_FILE=\/var\/run\/pubsub.pid/)
+        .with_content(/LOG_FILE=\/home\/testuser\/pubsub_app\/log\/node.log/)
+        .with_content(/--exec \/bin\/bash -- -c \"cd \/home\/testuser\/pubsub_app; exec node app.js > \$LOG_FILE 2>&1\"/)
+    }
 
     it { should contain_user('testuser')
         .with({ 'ensure'     => 'present',
@@ -216,6 +245,21 @@ describe 'pubsub_setup::config' do
         .with_content(/group pubsub/)
         .with_content(/start program = \"\/etc\/init.d\/pubsub start\"/)
         .with_content(/stop program = \"\/etc\/init.d\/pubsub stop\"/)
+    }
+
+    it { should contain_file('/etc/init.d/pubsub')
+        .with({
+                'ensure'     => 'file',
+                'require'    => 'template(pubsub_setup/init_pubsub.conf.erb)',
+                'require'    => 'Package[monit]',
+                'notify'     => 'Service[monit]',
+              })
+    }
+
+    it { should contain_file('/etc/init.d/pubsub')
+        .with_content(/PID_FILE=\/var\/run\/pubsub.pid/)
+        .with_content(/LOG_FILE=\/home\/testuser\/ln_notifications\/current\/log\/node.log/)
+        .with_content(/--exec \/bin\/bash -- -c \"cd \/home\/testuser\/ln_notifications\/current; exec node app.js > \$LOG_FILE 2>&1\"/)
     }
 
     it { should contain_user('testuser')

@@ -3,7 +3,7 @@
 set -e
 
 PID_FILE=/var/run/pubsub.pid
-LOG_FILE=/home/deploy/ln_notifications/log/node.log
+LOG_FILE=<%= deploy_dir %>/log/node.log
 NODE_USER=deploy
 
 case $1 in
@@ -15,7 +15,7 @@ case $1 in
         # then clean start
         start-stop-daemon --start --quiet --chuid $NODE_USER \
             --make-pidfile --pidfile $PID_FILE --background \
-            --exec /bin/bash -- -c "cd /home/deploy/ln_notifications; exec node app.js > $LOG_FILE 2>&1"
+            --exec /bin/bash -- -c "cd <%= deploy_dir %>; exec node app.js > $LOG_FILE 2>&1"
         ;;
     stop)
         start-stop-daemon --stop --quiet --oknodo --pidfile $PID_FILE

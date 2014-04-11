@@ -32,6 +32,13 @@ class pubsub_setup::config(
     notify       => Service['monit'],
   }
 
+  file { '/etc/init.d/pubsub':
+    ensure       => 'file',
+    content      => template('pubsub_setup/init_pubsub.erb'),
+    require      => Package['monit'],
+    notify       => Service['monit'],
+  }
+
   if !defined(User[$deploy_user]) {
     # password is foobar, but we aren't going
     # to use it anyway.
