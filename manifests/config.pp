@@ -35,6 +35,7 @@ class pubsub_setup::config(
   file { '/etc/init.d/pubsub':
     ensure       => 'file',
     content      => template('pubsub_setup/init_pubsub.erb'),
+    mode         => 0755,
     require      => Package['monit'],
     notify       => Service['monit'],
   }

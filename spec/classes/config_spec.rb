@@ -44,6 +44,7 @@ describe 'pubsub_setup::config' do
         .with({
                 'ensure'     => 'file',
                 'require'    => 'template(pubsub_setup/init_pubsub.conf.erb)',
+                'mode'       => '0755',
                 'require'    => 'Package[monit]',
                 'notify'     => 'Service[monit]',
               })
@@ -159,6 +160,7 @@ describe 'pubsub_setup::config' do
     it { should contain_file('/etc/init.d/pubsub')
         .with({
                 'ensure'     => 'file',
+                'mode'       => '0755',
                 'require'    => 'template(pubsub_setup/init_pubsub.conf.erb)',
                 'require'    => 'Package[monit]',
                 'notify'     => 'Service[monit]',
@@ -250,6 +252,7 @@ describe 'pubsub_setup::config' do
     it { should contain_file('/etc/init.d/pubsub')
         .with({
                 'ensure'     => 'file',
+                'mode'       => '0755',
                 'require'    => 'template(pubsub_setup/init_pubsub.conf.erb)',
                 'require'    => 'Package[monit]',
                 'notify'     => 'Service[monit]',
