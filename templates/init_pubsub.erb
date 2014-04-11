@@ -10,7 +10,7 @@ case $1 in
     start)
         # rm -rf $PID_FILE
 
-        # first stop to avoid port clash on mistaken start
+        # first stop to avoid port clash on mistaken (manual) restart
         start-stop-daemon --stop --quiet --oknodo --pidfile $PID_FILE
         # then clean start
         start-stop-daemon --start --quiet --chuid $NODE_USER \

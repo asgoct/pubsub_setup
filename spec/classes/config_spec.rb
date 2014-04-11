@@ -34,10 +34,10 @@ describe 'pubsub_setup::config' do
     }
 
     it { should contain_file('/etc/monit/conf.d/pubsub.conf')
-        .with_content(/check process pubsub with pidfile \/home\/testuser\/pubsub_app\/log\/pubsub.pid/)
+        .with_content(/check process pubsub with pidfile \/var\/run\/pubsub.pid/)
         .with_content(/group pubsub/)
-        .with_content(/start program = \"\/home\/testuser\/pubsub_app\/script\/server start\" as uid testuser and gid testuser/)
-        .with_content(/stop program = \"\/home\/testuser\/pubsub_app\/script\/server stop\" as uid testuser and gid testuser/)
+        .with_content(/start program = \"\/etc\/init.d\/pubsub start\"/)
+        .with_content(/stop program = \"\/etc\/init.d\/pubsub stop\"/)
     }
 
     it { should contain_user('testuser')
@@ -125,6 +125,23 @@ describe 'pubsub_setup::config' do
               })
     }
 
+    it { should contain_file('/etc/monit/conf.d/pubsub.conf')
+        .with({
+                'ensure'     => 'file',
+                'require'    => 'template(pubsub_setup/monit_pubsub.conf.erb)',
+                'require'    => 'Package[monit]',
+                'notify'     => 'Service[monit]',
+              })
+    }
+
+    it { should contain_file('/etc/monit/conf.d/pubsub.conf')
+        .with_content(/check process pubsub with pidfile \/var\/run\/pubsub.pid/)
+        .with_content(/group pubsub/)
+        .with_content(/start program = \"\/etc\/init.d\/pubsub start\"/)
+        .with_content(/stop program = \"\/etc\/init.d\/pubsub stop\"/)
+    }
+
+
     it { should contain_user('testuser')
         .with({ 'ensure'     => 'present',
                 'managehome' => 'true',
@@ -183,6 +200,22 @@ describe 'pubsub_setup::config' do
                 'require'    => 'Package[monit]',
                 'notify'     => 'Service[monit]',
               })
+    }
+
+    it { should contain_file('/etc/monit/conf.d/pubsub.conf')
+        .with({
+                'ensure'     => 'file',
+                'require'    => 'template(pubsub_setup/monit_pubsub.conf.erb)',
+                'require'    => 'Package[monit]',
+                'notify'     => 'Service[monit]',
+              })
+    }
+
+    it { should contain_file('/etc/monit/conf.d/pubsub.conf')
+        .with_content(/check process pubsub with pidfile \/var\/run\/pubsub.pid/)
+        .with_content(/group pubsub/)
+        .with_content(/start program = \"\/etc\/init.d\/pubsub start\"/)
+        .with_content(/stop program = \"\/etc\/init.d\/pubsub stop\"/)
     }
 
     it { should contain_user('testuser')
