@@ -2,9 +2,11 @@
 
 class pubsub_setup::service {
 
-  service { 'monit':
-    ensure     => running,
-    require    => Package['monit'],
+  if !defined(Service['monit']) {
+    service { 'monit':
+      ensure     => running,
+      require    => Package['monit'],
+    }
   }
 
 }

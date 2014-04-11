@@ -105,19 +105,10 @@ describe 'pubsub_setup::config' do
                 'cwd'       => '/home/testuser/pubsub_app/config',
                 'creates'   => '/home/testuser/pubsub_app/config/config.js',
                 'require'   => 'Exec[npm-install]',
+                'notify'    => 'Service[monit]',
               })
     }
 
-    it { should contain_exec('start-server-pubsub_app')
-        .with({
-                'command'   => 'node app.js&',
-                'user'      => 'testuser',
-                'group'     => 'testuser',
-                'cwd'       => '/home/testuser/pubsub_app',
-                'unless'    => "ps ax | grep '[n]ode app.js'",
-                'require'   => 'Exec[copy-configjs]',
-              })
-    }
   end
 
   context 'development setting' do
@@ -202,19 +193,10 @@ describe 'pubsub_setup::config' do
                 'cwd'       => '/home/testuser/pubsub_app/config',
                 'creates'   => '/home/testuser/pubsub_app/config/config.js',
                 'require'   => 'Exec[npm-install]',
+                'notify'    => 'Service[monit]',
               })
     }
 
-    it { should contain_exec('start-server-pubsub_app')
-        .with({
-                'command'   => 'node app.js&',
-                'user'      => 'testuser',
-                'group'     => 'testuser',
-                'cwd'       => '/home/testuser/pubsub_app',
-                'unless'    => "ps ax | grep '[n]ode app.js'",
-                'require'   => 'Exec[copy-configjs]',
-              })
-    }
   end
 
   context 'production setting' do
@@ -279,8 +261,6 @@ describe 'pubsub_setup::config' do
     it { should_not contain_exec('npm-install') }
 
     it { should_not contain_exec('copy-configjs') }
-
-    it { should_not contain_exec('start-server-pubsub_app') }
 
    end
 end

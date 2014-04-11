@@ -18,11 +18,13 @@ class pubsub_setup::config(
     $rails_env  = 'development'
   }
 
-  file { '/etc/monit/monitrc':
-    ensure       => file,
-    source       => 'puppet:///modules/pubsub_setup/monitrc',
-    require      => Package['monit'],
-    notify       => Service['monit'],
+  if !defined(File['/etc/monit/monitrc']) {
+    file { '/etc/monit/monitrc':
+      ensure       => file,
+      source       => 'puppet:///modules/pubsub_setup/monitrc',
+      require      => Package['monit'],
+      notify       => Service['monit'],
+    }
   }
 
   file { '/etc/monit/conf.d/pubsub.conf':
@@ -93,16 +95,9 @@ class pubsub_setup::config(
       cwd         => "${deploy_dir}/config",
       creates     => "${deploy_dir}/config/config.js",
       require     => Exec['npm-install'],
+      notify      => Service['monit'],
     }
 
-    exec { "start-server-${app_name}":
-      command     => 'node app.js&',
-      user        => $deploy_user,
-      group       => $deploy_user,
-      cwd         => $deploy_dir,
-      unless      => "ps ax | grep '[n]ode app.js'",
-      require     => Exec['copy-configjs'],
-    }
   }
 
 }
